@@ -20,12 +20,12 @@ function MSE = Iris_project(Nfeatures, alpha)
     t_test = createt(Nclasses, Ntest, bs);
     
     % Start training our model
-    for i = 1:1000
+    for i = 1:100000
         %Calculates the full g matrix
         g_train = calcg(Nclasses, Ntrain, x_train, W);
     
         %calculates current MSE and prints it
-        MSE = calcMSE(Ntrain, x_train, g_train, t_train, bs);
+        MSE = calcMSE(Ntrain, g_train, t_train, bs);
     
         %Calculates current gradient of MSE dependent on W
         gMSE = calcGradientMSE(Nclasses, dimx, Ntrain, t_train, g_train, x_train, bs);
@@ -115,10 +115,10 @@ function g = calcg(Nclasses, Ntrain, x, W)
         end
 end
 
-function MSE = calcMSE(N, x, g, t, bs) %Calculates current MSE of system
+function MSE = calcMSE(N, g, t) %Calculates current MSE of system
     MSE = 0;
         for k = 1:N*3
-            dMSE = 0.5 * dot(g(:, k)-t(:,k), bs(1:3)'-g(:, k));
+            dMSE = 0.5 * dot((g(:, k)-t(:,k))', g(:, k)-t(:,k));
     
             MSE = MSE + dMSE;
         end
