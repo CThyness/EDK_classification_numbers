@@ -18,7 +18,7 @@ function MSE = Iris_project(Nfeatures, alpha, splitMode)
     t_test = createt(Nclasses, Ntest);
     
     % Start training our model
-    for i = 1:5081
+    for i = 1:10000
         %Calculates the full g matrix
         g_train = calcg(Nclasses, Ntrain, x_train, W);
     
@@ -92,7 +92,7 @@ function [x_train, x_test] = splitSamples(Ntrain, Ntot, dimx, x1, x2, x3, splitM
     x1_test(:, dimx+1) = 1;
     
     x2_test = zeros(Ntot-Ntrain, dimx);
-    x2_test(: , 1:dimx) = x3(start_test:end_test, :);
+    x2_test(: , 1:dimx) = x2(start_test:end_test, :);
     x2_test(:, dimx+1) = 1;
     
     x3_test = zeros(Ntot-Ntrain, dimx);
