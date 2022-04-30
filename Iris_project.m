@@ -164,13 +164,30 @@ function conf = fillConf(N, Nclasses, g)
 end
 
 function [conf_train, conf_test] = displayConf(Ntrain, Ntest, Nclasses, g_train, g_test)
+    wanted_train = [kron(ones(1,N_test),t1), kron(ones(1,N_test),t2), kron(ones(1,N_test),t3)];
     g_train = Heavyside(g_train, Ntrain, Nclasses);
     conf_train = fillConf(Ntrain, Nclasses, g_train);
 
+    wanted_test = [Ntest 0 0; 0 Ntest 0; 0 0 Ntest];
     g_test = Heavyside(g_test, Ntest, Nclasses);
     conf_test = fillConf(Ntest, Nclasses, g_test);
     
-	disp([conf_train conf_test])
+	figure(1);
+    plotconfusion(wanted_train,conf_train,'Iris training set');
+    titl = get(get(gca,'title'),'string');
+    title({titl, '30 first training, 20 last testing'});
+    title({titl, '30 last training, 20 first testing'});
+    xticklabels({'Setosa', 'Versicolour', 'Virginica'});
+    yticklabels({'Setosa', 'Versicolour', 'Virginica'});
+    
+    
+    figure(2);
+    plotconfusion(wanted_test,conf_test,'Iris test set');
+    titl = get(get(gca,'title'),'string');
+    title({titl, '30 first training, 20 last testing'});
+    title({titl, '30 last training, 20 first testing'});
+    xticklabels({'Setosa', 'Versicolour', 'Virginica'});
+    yticklabels({'Setosa', 'Versicolour', 'Virginica'});
 end
 
 
