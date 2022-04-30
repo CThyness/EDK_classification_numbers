@@ -10,15 +10,14 @@ function MSE = Iris_project(Nfeatures, alpha)
     % Takes the first 30 samples of each class for training, reserves the rest
     % for testing
     Ntrain = 30;
+    Ntest = Ntot - Ntrain;
     bs = ones(Ntrain);
     bs = bs(1, :);
     [x_train, x_test] = splitSamples(Ntrain, Ntot, dimx, bs, x1, x2, x3);
     
-    %Creates an array for checking results
-    t_train = zeros(Nclasses, Ntrain*3);
-    for i = 1:Nclasses
-        t_train(i, Ntrain*(i-1)+1:Ntrain*i) = bs;
-    end
+    %Creates arrays for checking results
+    t_train = createt(Nclasses, Ntrain, bs);
+    t_test = createt(Nclasses, Ntest, bs);
     
     % Start training our model
     for i = 1:1000
@@ -30,8 +29,8 @@ function MSE = Iris_project(Nfeatures, alpha)
     
         %Calculates current gradient of MSE dependent on W
         gMSE = calcGradientMSE(Nclasses, dimx, Ntrain, t_train, g_train, x_train, bs);
-    
-        break %Just testing my code so far, do not want it to run a thousand times yet
+
+        W = W - alpha*gMSE;
     end
 end
 
@@ -138,11 +137,14 @@ function gMSE = calcGradientMSE(Nclasses, dimx, N, t, g, x, bs) %Calculates the 
     
             gMSE = gMSE + dgMSE;
         end
-        disp(gMSE);
 end
 
+function t = createt(Nclasses, N, bs)
+    t = zeros(Nclasses, N*3);
+    for i = 1:Nclasses
+        t(i, N*(i-1)+1:N*i) = bs(1:N);
+    end
 
-
-
+end
 
 
