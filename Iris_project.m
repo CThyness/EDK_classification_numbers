@@ -115,16 +115,13 @@ function g = calcg(Nclasses, Ntrain, x, W)
         end
 end
 
-function MSE = calcMSE(N, x, g, t, bs)
+function MSE = calcMSE(N, x, g, t, bs) %Calculates current MSE of system
     MSE = 0;
         for k = 1:N*3
-            dMSE = dot(g(:, k)-t(:,k), g(:, k));
-            dMSE = dMSE*(bs(1:3)'-g(:, k));
-            dMSE = dot(dMSE, x(k, :)');
+            dMSE = 0.5 * dot(g(:, k)-t(:,k), bs(1:3)'-g(:, k));
     
             MSE = MSE + dMSE;
         end
-        disp(MSE);
 end
 
 function gMSE = calcGradientMSE(Nclasses, dimx, N, t, g, x, bs) %Calculates the gradient of the MSE dependent on W
