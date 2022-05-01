@@ -71,50 +71,50 @@ ylabel('Count');
 
 figure(3);
 clf;
-sgtitle('Pedal length for different classes');
+sgtitle('Petal length for different classes');
 
 subplot(411);
 hold on;
 histogram(classSetosa(:,3), sl_bins);
 
-xlabel('Pedal length [cm] for Setosa');
+xlabel('Petal length [cm] for Setosa');
 ylabel('Count');
 
 subplot(412);
 hold on;
 histogram(classVersicolour(:,3), sl_bins);
 
-xlabel('Pedal length [cm] for Versicolour');
+xlabel('Petal length [cm] for Versicolour');
 ylabel('Count');
 
 subplot(413);
 hold on;
 histogram(classVirginica(:,3), sl_bins);
 
-xlabel('Pedal length [cm] for Viriginica');
+xlabel('Petal length [cm] for Viriginica');
 ylabel('Count');
 
 figure(4);
 clf;
-sgtitle('Pedal width for different classes');
+sgtitle('Petal width for different classes');
 
 subplot(411);
 hold on;
 histogram(classSetosa(:,4), sl_bins);
 
-xlabel('Pedal width [cm] for Setosa');
+xlabel('Petal width [cm] for Setosa');
 ylabel('Count');
 
 subplot(412);
 hold on;
 histogram(classVersicolour(:,4), sl_bins);
 
-xlabel('Pedal width [cm] for Versicolour');
+xlabel('Petal width [cm] for Versicolour');
 ylabel('Count');
 
 subplot(413);
 hold on;
 histogram(classVirginica(:,4), sl_bins);
 
-xlabel('Pedal width [cm] for Viriginica');
+xlabel('Petal width [cm] for Viriginica');
 ylabel('Count');
