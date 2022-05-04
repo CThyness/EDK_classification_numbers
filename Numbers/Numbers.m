@@ -1,5 +1,5 @@
-%This will hopefully work
-function res = Numbers(K, M)
+%You must start by opening the all_data.mat file
+function bs = Numbers(K, M)
     %Get data from workspace into the script
     Nnumbers = 10;
     Ntest = evalin('base', 'num_test');
@@ -79,7 +79,7 @@ function [guess, guess1D] = test_with_clustering(features_test, features_train, 
     for c = 1:Nnumbers
         C_train((c-1)*M+1:c*M) = c-1;
     end
-
+    
     %Actual testing
     [guess, guess1D] = test(features_test, features_train, C_train, Nnumbers, Ntest, K);
 end
@@ -148,5 +148,4 @@ function features_train_sorted = sortC(C_train, features_train, Nnumbers) %For s
     end
 end
 
-
-
+% 

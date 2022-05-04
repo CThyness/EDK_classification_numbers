@@ -5,7 +5,7 @@ function MSE = Iris_project(Nfeatures, alpha, splitMode)
     [Ntot,dimx] = size(x1);
     Nclasses = 3;
 
-    W = eye(Nclasses, dimx+1);
+    W = zeros(Nclasses, dimx+1);
     
     % Takes the first 30 samples of each class for training, reserves the rest
     % for testing
@@ -31,11 +31,9 @@ function MSE = Iris_project(Nfeatures, alpha, splitMode)
 
     g_train = calcg(Nclasses, Ntrain, x_train, W);
     g_test = calcg(Nclasses, Ntest, x_test, W);
-    g_test = Heavyside(g_test, Ntest, Nclasses);
     MSE = calcMSE(Ntest, g_test, t_test);
-    disp(W);
 
-    displayConf(Ntrain, Ntest, Nclasses, g_train, g_test);
+    displayConf(Ntrain, Ntest, Nclasses, g_train, g_test, t_train, t_test, splitMode);
 end
 
 function [x1, x2, x3] = getData(Nfeatures) % Henter ut data
@@ -43,25 +41,24 @@ function [x1, x2, x3] = getData(Nfeatures) % Henter ut data
     x2all = load('class_2','-ascii');
     x3all = load('class_3','-ascii');
 
-    if Nfeatures == 1
+    if Nfeatures == 1 %get only petal width
         x1= [x1all(:,4)];
         x2= [x2all(:,4)];
         x3= [x3all(:,4)];
-    elseif Nfeatures == 2
-        x1= [x1all(:,3) x1all(:,4)];
-        x2= [x2all(:,3) x2all(:,4)];
-        x3= [x3all(:,3) x3all(:,4)];
-    elseif Nfeatures == 3
-        x1= [x1all(:,4) x1all(:,1) x1all(:,2)];
-        x2= [x2all(:,4) x2all(:,1) x2all(:,2)];
-        x3= [x3all(:,4) x3all(:,1) x3all(:,2)];
-    else
+    elseif Nfeatures == 2 %get petal width and sepal length
+        x1= [x1all(:,4) x1all(:,1)];
+        x2= [x2all(:,4) x2all(:,1)];
+        x3= [x3all(:,4) x3all(:,1)];
+    elseif Nfeatures == 3 %get all features execept sepal width
+        x1= [x1all(:,4) x1all(:,1) x1all(:,3)];
+        x2= [x2all(:,4) x2all(:,1) x2all(:,3)];
+        x3= [x3all(:,4) x3all(:,1) x3all(:,3)];
+    else %get all features
         x1 = x1all;
         x2 = x2all;
         x3 = x3all;
     end
 end
-
 
 function [x_train, x_test] = splitSamples(Ntrain, Ntot, dimx, x1, x2, x3, splitMode)
     if(splitMode == 1)
@@ -152,43 +149,32 @@ function g = Heavyside(g, N, Nclasses)
     end
 end
 
-function conf = fillConf(N, Nclasses, g)
-    conf = zeros(Nclasses, Nclasses);
-    for c = 1:Nclasses
-        for k = (c-1)*N+1:N*c
-            for c_chosen = 1:Nclasses
-                conf(c, c_chosen) = conf(c, c_chosen) + g(c_chosen, k);
-            end
-        end
-    end
-end
-
-function [conf_train, conf_test] = displayConf(Ntrain, Ntest, Nclasses, g_train, g_test)
-    wanted_train = [kron(ones(1,N_test),t1), kron(ones(1,N_test),t2), kron(ones(1,N_test),t3)];
-    g_train = Heavyside(g_train, Ntrain, Nclasses);
-    conf_train = fillConf(Ntrain, Nclasses, g_train);
-
-    wanted_test = [Ntest 0 0; 0 Ntest 0; 0 0 Ntest];
-    g_test = Heavyside(g_test, Ntest, Nclasses);
-    conf_test = fillConf(Ntest, Nclasses, g_test);
+function [conf_train, conf_test] = displayConf(Ntrain, Ntest, Nclasses, g_train, g_test, t_train, t_test, splitMode)
+    conf_train = Heavyside(g_train, Ntrain, Nclasses);
+   
+    conf_test = Heavyside(g_test, Ntest, Nclasses);
     
 	figure(1);
-    plotconfusion(wanted_train,conf_train,'Iris training set');
+    plotconfusion(t_train,conf_train,'Iris training set');
     titl = get(get(gca,'title'),'string');
-    title({titl, '30 first training, 20 last testing'});
-    title({titl, '30 last training, 20 first testing'});
+    if splitMode == 1
+        title({titl, '30 first training, 20 last testing'});
+    elseif splitMode == 2
+        title({titl, '30 last training, 20 first testing'});
+    end
     xticklabels({'Setosa', 'Versicolour', 'Virginica'});
     yticklabels({'Setosa', 'Versicolour', 'Virginica'});
     
     
     figure(2);
-    plotconfusion(wanted_test,conf_test,'Iris test set');
+    plotconfusion(t_test,conf_test,'Iris test set');
     titl = get(get(gca,'title'),'string');
-    title({titl, '30 first training, 20 last testing'});
-    title({titl, '30 last training, 20 first testing'});
+    if splitMode == 1
+        title({titl, '30 first training, 20 last testing'});
+    elseif splitMode == 2
+        title({titl, '30 last training, 20 first testing'});
+    end
     xticklabels({'Setosa', 'Versicolour', 'Virginica'});
     yticklabels({'Setosa', 'Versicolour', 'Virginica'});
 end
-
-
 
